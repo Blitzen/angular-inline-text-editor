@@ -1,6 +1,6 @@
 (function () {
-  angular.module( 'InlineTextEditor', [
-]);
+
+angular.module( 'InlineTextEditor', []);
 
 function inlineTextEditor($sce, $compile, $timeout){
   return {
@@ -26,10 +26,10 @@ function inlineTextEditor($sce, $compile, $timeout){
       rangy.init();
 
       originalToolbar = [ '<div contentEditable="false" name="inlineToolbar" class="btn-group" role="group" aria-label="...">',
-                            '<button type="button" ng-click="applyClass(\'bold\')" class="btn btn-default" data-inline-type="bold"><i class="fa fa-bold"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'italic\')" class="btn btn-default" data-inline-type="italic"><i class="fa fa-italic"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'underline\')" class="btn btn-default" data-inline-type="underline"><i class="fa fa-underline"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'strikethrough\')" class="btn btn-default" data-inline-type="strikethrough"><i class="fa fa-strikethrough"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-bold\')" class="btn btn-default" data-inline-type="bold"><i class="fa fa-bold"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default" data-inline-type="italic"><i class="fa fa-italic"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default" data-inline-type="underline"><i class="fa fa-underline"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default" data-inline-type="strikethrough"><i class="fa fa-strikethrough"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
                                 '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url, then hit enter" ng-model="linkUrl" class="form-control" required/>',
@@ -142,7 +142,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         toolbar[0].style.left = clickPosition.x - 50 + 'px';
         toolbar[0].style.top = clickPosition.y + 15 + 'px';
 
-        if ((window.outerWidth - clickPosition.x) - angular.element(toolbar).width() < 125) {
+        if ((window.outerWidth - clickPosition.x) - angular.element(toolbar).prop('offsetWidth') < 125) {
           toolbar[0].style.left = null;
           toolbar[0].style.right = (window.outerWidth - clickPosition.x) - 50 + 'px';
         }

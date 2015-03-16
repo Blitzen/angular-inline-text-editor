@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angular-inline-text-editor example</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="ite.css">
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/rangy/rangy-core.js"></script>
+    <script src="bower_components/rangy/rangy-selectionsaverestore.js"></script>
+    <script src="bower_components/rangy/rangy-classapplier.js"></script>
+    <script src="ite.js"></script>
+
+    <script>
+        angular.module('myApp', ['InlineTextEditor'])
+
+        .controller('MyController', function($scope){
+            $scope.lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi dolor vero illum at iste. Eos, suscipit quas iste aut aliquam doloribus, consequuntur tempora quasi enim ipsam provident ad sunt blanditiis.';
+        });
+
+    </script>
+
+    <style>
+        input.ng-invalid.ng-dirty, textarea.ng-invalid.ng-dirty{
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div ng-app="myApp">
+        <div ng-controller="MyController" class="col-xs-12">
+
+            <h1>Angular-inline-text-editor</h1>
+
+            <div class="panel">
+                <div class="col-xs-6">
+                    <h4>Make changes here:</h4>
+                    <div inline-text-editor ng-model="lorem" class="inline-text-editor" contentEditable></div>
+                </div>
+
+                <div class="col-xs-6">
+                    <h4>Results:</h4>
+                    <div class="well">
+                        <div ng-bind-html="lorem | toTrusted">{{testText}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

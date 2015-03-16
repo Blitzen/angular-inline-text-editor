@@ -1,0 +1,23 @@
+
+input.ng-invalid.ng-dirty, textarea.ng-invalid.ng-dirty{
+    border-color: red;
+}
+
+div[inline-text-editor] {
+    display: inline-block;
+    outline: none;
+    position: relative;
+}
+
+.ite-bold {
+    font-weight: bold;
+}
+.ite-italic {
+    font-style: italic;
+}
+.ite-underline {
+    text-decoration: underline;
+}
+.ite-strikethrough {
+    text-decoration: line-through;
+}
