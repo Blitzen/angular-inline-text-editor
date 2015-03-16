@@ -17,9 +17,10 @@
     <script>
         angular.module('myApp', ['InlineTextEditor'])
 
-        .controller('MyController', function($scope){
+        .controller('MyController', ["$scope", function($scope){
             $scope.lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi dolor vero illum at iste. Eos, suscipit quas iste aut aliquam doloribus, consequuntur tempora quasi enim ipsam provident ad sunt blanditiis.';
-        });
+            }
+        ]);
 
     </script>
 
@@ -30,7 +31,7 @@
     </style>
 </head>
 <body>
-    <div ng-app="myApp">
+    <div ng-app="myApp" ng-strict-di>
         <div ng-controller="MyController" class="col-xs-12">
 
             <h1>Angular-inline-text-editor</h1>

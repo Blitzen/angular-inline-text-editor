@@ -181,11 +181,15 @@ function inlineTextEditor($sce, $compile, $timeout){
   };
 }
 
+inlineTextEditor.$inject = ["$sce", "$compile", "$timeout"];
+
 function toTrusted($sce){
   return function(text) {
       return $sce.trustAsHtml(text);
   };
 }
+
+toTrusted.$inject = ["$sce"];
 
 function urlValidator() {
   return {
