@@ -1,5 +1,5 @@
 # angular-inline-text-editor
-A very basic WYSIWYG inline editor for AngularJS. (Demo)[http://blitzen.github.io/]
+A very basic WYSIWYG inline editor for AngularJS. [Demo](http://blitzen.github.io/)
 
 ## Dependencies
 - AngularJS
