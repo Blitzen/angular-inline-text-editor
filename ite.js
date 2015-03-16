@@ -26,16 +26,16 @@ function inlineTextEditor($sce, $compile, $timeout){
       rangy.init();
 
       originalToolbar = [ '<div contentEditable="false" name="inlineToolbar" class="btn-group" role="group" aria-label="...">',
-                            '<button type="button" ng-click="applyClass(\'ite-bold\')" class="btn btn-default" data-inline-type="bold"><i class="fa fa-bold"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default" data-inline-type="italic"><i class="fa fa-italic"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default" data-inline-type="underline"><i class="fa fa-underline"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default" data-inline-type="strikethrough"><i class="fa fa-strikethrough"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-bold\')" class="btn btn-default" data-inline-type="ite-bold"><i class="fa fa-bold"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default" data-inline-type="ite-italic"><i class="fa fa-italic"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default" data-inline-type="ite-underline"><i class="fa fa-underline"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default" data-inline-type="ite-strikethrough"><i class="fa fa-strikethrough"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
                                 '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url, then hit enter" ng-model="linkUrl" class="form-control" required/>',
                               '</form>',
                             '</div>',
-                            '<button type="button" ng-click="applyLink()" class="btn btn-default" data-inline-type="link"><i class="fa fa-link"></i></button>',
+                            '<button type="button" ng-click="applyLink()" class="btn btn-default" data-inline-type="ite-link"><i class="fa fa-link"></i></button>',
                           '</div>'].join('');
 
       // Listen for change events to enable binding
