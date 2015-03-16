@@ -1,0 +1,25 @@
+{
+  "name": "angular-inline-text-editor",
+  "version": "0.1.0",
+  "authors": [
+    "Duncan McDowell <duncan@blitzen.com>",
+    "Jordan Clark <jordan@blitzen.com>"
+  ],
+  "description": "An inline text editor for AngularJS",
+  "main": "ite.js",
+  "keywords": [
+    "angularjs",
+    "inline",
+    "editor",
+    "text",
+    "wysiwyg"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
