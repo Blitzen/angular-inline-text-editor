@@ -1,12 +1,13 @@
 
-input.ng-invalid.ng-dirty, textarea.ng-invalid.ng-dirty{
+#inline-toolbar-link-url.ng-invalid.ng-dirty{
     border-color: red;
 }
 
-div[inline-text-editor] {
+[inline-text-editor] {
     display: inline-block;
     outline: none;
     position: relative;
+    cursor: text;
 }
 
 .ite-bold {
@@ -20,4 +21,10 @@ div[inline-text-editor] {
 }
 .ite-strikethrough {
     text-decoration: line-through;
+}
+
+[inline-text-editor][contentEditable]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: grey;
 }

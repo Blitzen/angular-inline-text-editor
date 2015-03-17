@@ -19,7 +19,6 @@ function inlineTextEditor($sce, $compile, $timeout){
         ngModel.$setViewValue(html);
       }
 
-
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
       var savedSelection, clickPosition, overToolbar, originalToolbar, toolbar;
@@ -62,9 +61,16 @@ function inlineTextEditor($sce, $compile, $timeout){
         removeToolbar();
       });
 
+      // Bind to escape key to remove the toolbar
+      element.bind("keydown", function (e) {
+          if (e.keyCode == 27) {
+            removeToolbar('escape');
+          }
+      });
+
       $scope.applyClass = function(cssClass) {
         // this conditional handles the edge case if the user clicks a class button while having link input open
-        if (savedSelection) { rangy.restoreSelection(savedSelection); }
+        if (savedSelection && rangy.getSelection().rangeCount == 0) { rangy.restoreSelection(savedSelection); }
         var classApplierModule = rangy.modules.ClassApplier || rangy.modules.CssClassApplier;
         classApplier = rangy.createCssClassApplier(cssClass);
         classApplier.toggleSelection();
@@ -97,7 +103,7 @@ function inlineTextEditor($sce, $compile, $timeout){
             angular.element(rangy.getSelection().focusNode).attr('href', $scope.linkUrl);
 
           } else if($scope.inlineToolbarUrlForm.$valid) {
-            classApplier = rangy.createCssClassApplier('link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
+            classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
             classApplier.toggleSelection();
           }
           $scope.linkUrl = '';
@@ -153,12 +159,17 @@ function inlineTextEditor($sce, $compile, $timeout){
         angular.element(toolbar).bind('mouseover', function (e) {
           overToolbar = true;
         });
+        angular.element(document.getElementById('inline-toolbar-link-url')).bind("keydown", function (e) {
+          if (e.keyCode == 27) {
+            removeToolbar('escape');
+          }
+        });
 
         setButtonState();
       };
 
-      var removeToolbar = function(){
-        if (!overToolbar) {
+      var removeToolbar = function(escape){
+        if (!overToolbar || (overToolbar && escape)) {
           $scope.expandLinkInput = false;
           angular.element(toolbar).remove();
         }
