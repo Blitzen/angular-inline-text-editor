@@ -21,6 +21,7 @@ function inlineTextEditor($sce, $compile, $timeout){
 
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
+       $scope.expandEmailInput = false;
       var savedSelection, clickPosition, overToolbar, originalToolbar, toolbar;
       rangy.init();
 
@@ -31,10 +32,16 @@ function inlineTextEditor($sce, $compile, $timeout){
                             '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default" data-inline-type="ite-strikethrough"><i class="fa fa-strikethrough"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
-                                '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url, then hit enter" ng-model="linkUrl" class="form-control" required/>',
+                                '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url" ng-model="linkUrl" class="form-control" required/>',
                               '</form>',
                             '</div>',
                             '<button type="button" ng-click="applyLink()" class="btn btn-default" data-inline-type="ite-link"><i class="fa fa-link"></i></button>',
+                            '<div class="btn-group ng-hide ng-cloak" ng-show="expandEmailInput">',
+                              '<form name="inlineToolbarEmailForm" class="input-group">',
+                                '<input id="inline-toolbar-email" type="email" placeholder="add email" ng-model="email" class="form-control" required/>',
+                              '</form>',
+                            '</div>',
+                            '<button type="button" ng-click="applyEmail()" class="btn btn-default" data-inline-type="ite-email">@</button>',
                           '</div>'].join('');
 
       // Listen for change events to enable binding
@@ -93,7 +100,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         // this checks if the user has typed in a link or not
         if ($scope.expandLinkInput) {
 
-          var httpRegex = new RegExp('http://', 'g', 'i');
+          var httpRegex = new RegExp('http(s)?://', 'g', 'i');
           $scope.linkUrl = $scope.linkUrl.match(httpRegex) ? $scope.linkUrl : 'http://'+$scope.linkUrl;
 
           rangy.restoreSelection(savedSelection);
@@ -119,6 +126,43 @@ function inlineTextEditor($sce, $compile, $timeout){
         if ($scope.expandLinkInput) {
           $timeout(function() {
             document.getElementById('inline-toolbar-link-url').focus();
+          },0);
+        }
+
+        setButtonState();
+      };
+
+      $scope.applyEmail = function() {
+        // this checks if the user has typed in a link or not
+        if ($scope.expandEmailInput) {
+
+          var emailRegex = new RegExp('mailto:', 'g', 'i');
+          $scope.email = $scope.email.match(emailRegex) ? $scope.email : 'mailto:'+$scope.email;
+
+          rangy.restoreSelection(savedSelection);
+
+          if (angular.element(rangy.getSelection().focusNode).attr('href')) {
+            $scope.email = $scope.email.match(emailRegex) ? $scope.email : 'mailto:'+$scope.email;
+            angular.element(rangy.getSelection().focusNode).attr('href', $scope.email);
+
+          } else if($scope.inlineToolbarEmailForm.$valid) {
+            classApplier = rangy.createCssClassApplier('ite-email', {elementTagName: 'a', elementAttributes: {'href':$scope.email}});
+            classApplier.toggleSelection();
+          }
+          $scope.email = '';
+        }
+        // If the user hasn't entered a link (i.e. they have simply clicked the link button the first time to show the input),
+        // then we need to save the selection so we can resore it later since it will be wiped once the link input is focused
+        else {
+          savedSelection = rangy.saveSelection();
+          $scope.email = linkFinder(rangy.getSelection().focusNode) || '';
+          $scope.email = $scope.email.replace('mailto:', '');
+        }
+        $scope.expandEmailInput = !$scope.expandEmailInput;
+
+        if ($scope.expandEmailInput) {
+          $timeout(function() {
+            document.getElementById('inline-toolbar-email').focus();
           },0);
         }
 
