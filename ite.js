@@ -21,7 +21,8 @@ function inlineTextEditor($sce, $compile, $timeout){
 
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
-       $scope.expandEmailInput = false;
+      $scope.expandEmailInput = false;
+      $scope.colorPickerActive = false;
       var savedSelection, clickPosition, overToolbar, originalToolbar, toolbar;
       rangy.init();
 
@@ -30,6 +31,8 @@ function inlineTextEditor($sce, $compile, $timeout){
                             '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default" data-inline-type="ite-italic"><i class="fa fa-italic"></i></button>',
                             '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default" data-inline-type="ite-underline"><i class="fa fa-underline"></i></button>',
                             '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default" data-inline-type="ite-strikethrough"><i class="fa fa-strikethrough"></i></button>',
+                            '<button type="button" ng-click="openColorPicker()" class="btn btn-default" data-inline-type="ite-color"><i class="fa fa-eyedropper"></i></button>',
+                            '<div class="color-picker" ng-show="colorPickerActive"></div>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
                                 '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url" ng-model="linkUrl" class="form-control" required/>',
@@ -51,16 +54,18 @@ function inlineTextEditor($sce, $compile, $timeout){
 
       // Create or remove toolbar depending on rangy selection
       element.bind('mouseup', function (e) {
-        clickPosition = { 'x' : e.pageX, 'y' : e.pageY};
-        var range = rangy.getSelection();
-        var start = range.anchorOffset;
-        var end = range.focusOffset;
+        $scope.$evalAsync(function() {
+          clickPosition = { 'x' : e.pageX, 'y' : e.pageY};
+          var range = rangy.getSelection();
+          var start = range.anchorOffset;
+          var end = range.focusOffset;
 
-        if (end - start !== 0) {
-          createToolbar();
-        } else {
-          removeToolbar();
-        }
+          if (end - start !== 0) {
+            createToolbar();
+          } else {
+            removeToolbar();
+          }
+        });
       });
 
       // Remove toolbar if the user clicks outside of the element
@@ -96,6 +101,10 @@ function inlineTextEditor($sce, $compile, $timeout){
         }
       };
 
+      $scope.openColorPicker = function(color) {
+        $scope.colorPickerActive = !$scope.colorPickerActive;
+      };
+
       $scope.applyLink = function() {
         // this checks if the user has typed in a link or not
         if ($scope.expandLinkInput) {
@@ -125,7 +134,11 @@ function inlineTextEditor($sce, $compile, $timeout){
 
         if ($scope.expandLinkInput) {
           $timeout(function() {
-            document.getElementById('inline-toolbar-link-url').focus();
+            var el = document.getElementById('inline-toolbar-link-url')
+            el.focus();
+            angular.element(el).bind('blur', function (e) {
+             removeToolbar();
+            });
           },0);
         }
 
@@ -162,7 +175,11 @@ function inlineTextEditor($sce, $compile, $timeout){
 
         if ($scope.expandEmailInput) {
           $timeout(function() {
-            document.getElementById('inline-toolbar-email').focus();
+            var el = document.getElementById('inline-toolbar-email');
+            el.focus();
+            angular.element(el).bind('blur', function (e) {
+             removeToolbar();
+            });
           },0);
         }
 
@@ -215,6 +232,8 @@ function inlineTextEditor($sce, $compile, $timeout){
       var removeToolbar = function(escape){
         if (!overToolbar || (overToolbar && escape)) {
           $scope.expandLinkInput = false;
+          $scope.expandEmailInput = false;
+          $scope.colorPickerActive = false;
           angular.element(toolbar).remove();
         }
       };

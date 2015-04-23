@@ -23,6 +23,15 @@
     text-decoration: line-through;
 }
 
+.color-picker {
+  position: absolute;
+  top: -92px;
+  width: 100%;
+  height: 89px;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+
 [inline-text-editor][contentEditable]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
