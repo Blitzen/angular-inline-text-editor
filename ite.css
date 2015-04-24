@@ -22,6 +22,24 @@
 .ite-strikethrough {
     text-decoration: line-through;
 }
+.ite-image {
+
+}
+
+.ite-image-handle-se {
+  width: 10px;
+  height: 10px;
+  border: 1px solid black;
+}
+
+.ite-image-resize-overlay {
+  background-color: black;
+  opacity: .15;
+}
+
+.inline-text-editor .ite-image:hover {
+  cursor: move;
+}
 
 .ite-color {
 

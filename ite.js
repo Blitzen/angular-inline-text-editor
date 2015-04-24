@@ -8,6 +8,8 @@ function inlineTextEditor($sce, $compile, $timeout){
     require: '?ngModel',
     link: function($scope, element, attrs, ngModel) {
 
+      var html, savedSelection, clickPosition, overToolbar, originalToolbar, toolbar;
+
       if (!ngModel) { return; }
       // Specify how UI should be updated
       ngModel.$render = function() {
@@ -15,16 +17,16 @@ function inlineTextEditor($sce, $compile, $timeout){
       };
       // Write data to the model
       function read() {
-        var html = element.html();
-        ngModel.$setViewValue(html);
+          html = element.html();
+          ngModel.$setViewValue(html);
       }
 
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
       $scope.expandEmailInput = false;
+      $scope.expandImageInput = false;
       $scope.colorPickerActive = false;
       $scope.colors = [{"gold": "#ffd700"}, {"yellow": "#ffff00"}, {"springgreen": "#00ff7f"}, {"mediumspringgreen": "#00fa9a"}, {"cyan": "#00ffff"}, {"aqua": "#00ffff"}, {"turquoise": "#40e0d0"}, {"mediumturquoise": "#48d1cc"}, {"mediumaquamarine": "#66cdaa"}, {"darkseagreen": "#8fbc8f"}, {"lightgreen": "#90ee90"}, {"palegreen": "#98fb98"}, {"aquamarine": "#7fffd4"}, {"lightskyblue": "#87cefa"}, {"skyblue": "#87ceeb"}, {"paleturquoise": "#afeeee"}, {"powderblue": "#b0e0e6"}, {"lightblue": "#add8e6"}, {"lightsteelblue": "#b0c4de"}, {"silver": "#c0c0c0"}, {"darkgray": "#a9a9a9"}, {"rosybrown": "#bc8f8f"}, {"palevioletred": "#d87093"}, {"hotpink": "#ff69b4"}, {"lightpink": "#ffb6c1"}, {"pink": "#ffc0cb"}, {"lemonchiffon": "#fffacd"}, {"lightgoldenrodyellow": "#fafad2"}, {"lightyellow": "#ffffe0"}, {"cornsilk": "#fff8dc"}, {"beige": "#f5f5dc"}, {"linen": "#faf0e6"}, {"oldlace": "#fdf5e6"}, {"seashell": "#fff5ee"}, {"floralwhite": "#fffaf0"}, {"ivory": "#fffff0"}, {"white": "#ffffff"}, {"snow": "#fffafa"}, {"ghostwhite": "#f8f8ff"}, {"aliceblue": "#f0f8ff"}, {"azure": "#f0ffff"}, {"mintcream": "#f5fffa"}, {"honeydew": "#f0fff0"}, {"whitesmoke": "#f5f5f5"}, {"lavenderblush": "#fff0f5"}, {"mistyrose": "#ffe4e1"}, {"antiquewhite": "#faebd7"}, {"papayawhip": "#ffefd5"}, {"blanchedalmond": "#ffebcd"}, {"bisque": "#ffe4c4"}, {"peachpuff": "#ffdab9"}, {"moccasin": "#ffe4b5"}, {"navajowhite": "#ffdead"}, {"wheat": "#f5deb3"}, {"palegoldenrod": "#eee8aa"}, {"khaki": "#f0e68c"}, {"lightcyan": "#e0ffff"}, {"lavender": "#e6e6fa"}, {"gainsboro": "#dcdcdc"}, {"lightgrey": "#d3d3d3"}, {"thistle": "#d8bfd8"}, {"plum": "#dda0dd"}, {"violet": "#ee82ee"}, {"orchid": "#da70d6"}, {"mediumorchid": "#ba55d3"}, {"mediumpurple": "#9370d8"}, {"mediumslateblue": "#7b68ee"}, {"slateblue": "#6a5acd"}, {"royalblue": "#4169e1"}, {"steelblue": "#4682b4"}, {"cadetblue": "#5f9ea0"}, {"lightslategray": "#778899"}, {"slategray": "#708090"}, {"gray": "#808080"}, {"indianred ": "#cd5c5c"}, {"tomato": "#ff6347"}, {"coral": "#ff7f50"}, {"salmon": "#fa8072"}, {"lightcoral": "#f08080"}, {"darksalmon": "#e9967a"}, {"lightsalmon": "#ffa07a"}, {"sandybrown": "#f4a460"}, {"burlywood": "#deb887"}, {"tan": "#d2b48c"}, {"darkkhaki": "#bdb76b"}, {"yellowgreen": "#9acd32"}, {"greenyellow": "#adff2f"}, {"chartreuse": "#7fff00"}, {"lawngreen": "#7cfc00"}, {"lime": "#00ff00"}, {"limegreen": "#32cd32"}, {"mediumseagreen": "#3cb371"}, {"seagreen": "#2e8b57"}, {"forestgreen": "#228b22"}, {"green": "#008000"}, {"darkgreen": "#006400"}, {"black": "#000000"}, {"maroon": "#800000"}, {"darkred": "#8b0000"}, {"saddlebrown": "#8b4513"}, {"sienna": "#a0522d"}, {"brown": "#a52a2a"}, {"firebrick": "#b22222"}, {"crimson": "#dc143c"}, {"red": "#ff0000"}, {"orangered": "#ff4500"}, {"darkorange": "#ff8c00"}, {"orange": "#ffa500"}, {"goldenrod": "#daa520"}, {"peru": "#cd853f"}, {"chocolate": "#d2691e"}, {"darkgoldenrod": "#b8860b"}, {"olive": "#808000"}, {"olivedrab": "#6b8e23"}, {"darkolivegreen": "#556b2f"}, {"darkslategray": "#2f4f4f"}, {"darkslateblue": "#483d8b"}, {"dimgray": "#696969"}, {"teal": "#008080"}, {"darkcyan": "#008b8b"}, {"lightseagreen": "#20b2aa"}, {"darkturquoise": "#00ced1"}, {"deepskyblue": "#00bfff"}, {"dodgerblue": "#1e90ff"}, {"cornflowerblue": "#6495ed"}, {"darkorchid": "#9932cc"}, {"blueviolet": "#8a2be2"}, {"darkviolet": "#9400d3"}, {"blue": "#0000ff"}, {"mediumblue": "#0000cd"}, {"darkblue": "#00008b"}, {"navy": "#000080"}, {"midnightblue": "#191970"}, {"indigo": "#4b0082"}, {"purple": "#800080"}, {"darkmagenta": "#8b008b"}, {"mediumvioletred": "#c71585"}, {"deeppink": "#ff1493"}, {"magenta": "#ff00ff"}, {"fuchsia": "#ff00ff"}]
-      var savedSelection, clickPosition, overToolbar, originalToolbar, toolbar;
       rangy.init();
 
       originalToolbar = [ '<div contentEditable="false" name="inlineToolbar" class="btn-group" role="group" aria-label="...">',
@@ -40,6 +42,12 @@ function inlineTextEditor($sce, $compile, $timeout){
                               '<div class="small">{{activeColor}} {{activeHex}}</div>',
                               // '<input type="text" class="form-control input-sm"/>',
                             '</div>',
+                            '<div class="btn-group ng-hide ng-cloak" ng-show="expandImageInput">',
+                              '<form name="inlineToolbarImageForm" class="input-group">',
+                                '<input id="inline-toolbar-image-url" type="text" url-validator placeholder="image link" ng-model="imageUrl" class="form-control input-sm" required/>',
+                              '</form>',
+                            '</div>',
+                            '<button type="button" ng-click="applyImage()" class="btn btn-default btn-sm" data-inline-type="ite-image"><i class="fa fa-image"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
                                 '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url" ng-model="linkUrl" class="form-control input-sm" required/>',
@@ -173,6 +181,54 @@ function inlineTextEditor($sce, $compile, $timeout){
         removeSelectionFormatting();
       }
 
+      $scope.setImageResizeElements = function($event) {
+        var target = angular.element($event.srcElement)
+        var targetHeight = $event.srcElement.height;
+        var targetWidth = $event.srcElement.width;
+        target.after('<div class="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;"><div class="ite-image-handle-se"></div></div>')
+      };
+
+      $scope.applyImage = function() {
+        // this checks if the user has typed in a link or not
+        if ($scope.expandImageInput) {
+
+          var httpRegex = new RegExp('http(s)?://', 'g', 'i');
+          $scope.imageUrl = $scope.imageUrl.match(httpRegex) ? $scope.imageUrl : 'http://'+$scope.imageUrl;
+
+          rangy.restoreSelection(savedSelection);
+
+          if (angular.element(rangy.getSelection().focusNode).attr('src')) {
+            $scope.imageUrl = $scope.linkUrl.match(httpRegex) ? $scope.imageUrl : 'http://'+$scope.imageUrl;
+            angular.element(rangy.getSelection().focusNode).attr('src', $scope.imageUrl);
+
+          } else if($scope.inlineToolbarImageForm.$valid) {
+            classApplier = rangy.createCssClassApplier('ite-image', {elementTagName: 'img', elementAttributes: {'src':$scope.imageUrl, 'ng-click':'setImageResizeElements($event)'}});
+            classApplier.toggleSelection();
+            $compile(element.contents())($scope);
+          }
+          $scope.imageUrl = '';
+        }
+        // If the user hasn't entered a link (i.e. they have simply clicked the link button the first time to show the input),
+        // then we need to save the selection so we can resore it later since it will be wiped once the link input is focused
+        else {
+          savedSelection = rangy.saveSelection();
+          $scope.imageUrl = linkFinder(rangy.getSelection().focusNode) || '';
+        }
+        $scope.expandImageInput = !$scope.expandImageInput;
+
+        if ($scope.expandImageInput) {
+          $timeout(function() {
+            var el = document.getElementById('inline-toolbar-image-url')
+            el.focus();
+            angular.element(el).bind('blur', function (e) {
+             removeToolbar();
+            });
+          },0);
+        }
+
+        setButtonState();
+      };
+
       $scope.applyLink = function() {
         // this checks if the user has typed in a link or not
         if ($scope.expandLinkInput) {
@@ -301,6 +357,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         if (!overToolbar || (overToolbar && escape)) {
           $scope.expandLinkInput = false;
           $scope.expandEmailInput = false;
+          $scope.expandImageInput = false;
           $scope.colorPickerActive = false;
           angular.element(toolbar).remove();
         }
