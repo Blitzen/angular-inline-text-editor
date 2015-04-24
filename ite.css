@@ -23,13 +23,29 @@
     text-decoration: line-through;
 }
 
+.ite-color {
+
+}
+
 .color-picker {
   position: absolute;
-  top: -92px;
+  top: -65px;
   width: 100%;
-  height: 89px;
   border: 1px solid grey;
+  background-color: white;
+  font-size: 0px;
   border-radius: 3px;
+}
+
+.color-picker div {
+  font-size: 11px;
+}
+
+.color {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  cursor: pointer;
 }
 
 [inline-text-editor][contentEditable]:empty:before {
