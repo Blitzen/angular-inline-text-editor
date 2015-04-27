@@ -129,6 +129,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         classApplier = rangy.createCssClassApplier('ite-color', {elementTagName: 'span', elementAttributes: {'style': 'color:' + color}});
         classApplier.undoToSelection();
         classApplier.applyToSelection();
+        savedSelection = rangy.saveSelection();
         setButtonState();
       };
 
@@ -138,7 +139,7 @@ function inlineTextEditor($sce, $compile, $timeout){
       };
 
       $scope.resetSelection = function() {
-
+        // Thanks to Tim Down for this code snippet
         var getComputedDisplay = (typeof window.getComputedStyle != "undefined") ?
           function(el) {
               return window.getComputedStyle(el, null).display;
@@ -182,10 +183,64 @@ function inlineTextEditor($sce, $compile, $timeout){
       }
 
       $scope.setImageResizeElements = function($event) {
-        var target = angular.element($event.srcElement)
-        var targetHeight = $event.srcElement.height;
-        var targetWidth = $event.srcElement.width;
-        target.after('<div class="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;"><div class="ite-image-handle-se"></div></div>')
+        clearSelection();
+
+        var target, targetHeight, targetWidth, ratio, overlayWidth, overlayHeight, startPositionX, startPositionY, currentPositionX, currentPositionY;
+        target = angular.element($event.srcElement)
+        targetHeight = $event.srcElement.height;
+        targetWidth = $event.srcElement.width;
+        ratio = targetHeight / targetWidth;
+        $event.srcElement.style.display = 'none';
+
+        target.after('<div tabindex="0" id="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;" contentEditable="false"><img src="'+$event.srcElement.currentSrc+'" height="100%" width="100%"/><div draggable="true" id="ite-image-handle-se" contentEditable="false"></div></div>');
+        seHandle = document.getElementById('ite-image-handle-se');
+        overlay = document.getElementById('ite-image-resize-overlay');
+        overlay.focus();
+
+        var setOverlaySize = function() {
+          currentPositionX = event.pageX;
+          currentPositionY = event.pageY;
+
+          if (event.shiftKey) {
+            overlayWidth = (targetWidth + (currentPositionX - startPositionX));
+            overlay.style.width = overlayWidth + "px";
+            overlayHeight = ((targetHeight + (currentPositionY - startPositionY)) * ratio)
+            overlay.style.height = overlayHeight + "px";
+          } else if ((targetWidth + (currentPositionX - startPositionX)) > 0) {
+            overlayWidth = (targetWidth + (currentPositionX - startPositionX));
+            overlay.style.width = overlayWidth + "px";
+            overlayHeight = (targetHeight + (currentPositionY - startPositionY));
+            overlay.style.height = overlayHeight + "px";
+          }
+        }
+
+        seHandle.addEventListener('dragstart', function(event) {
+          startPositionX = event.pageX;
+          startPositionY = event.pageY;
+          return false;
+        },false);
+
+        seHandle.addEventListener('drag', function(event, ui) {
+          setOverlaySize();
+          console.log('x: ',overlayWidth,'y: ',overlayHeight);
+          return false;
+        },false);
+
+        seHandle.addEventListener('dragend', function(event) {
+          // setOverlaySize();
+          targetHeight = overlayHeight;
+          targetWidth = overlayWidth;
+
+          return false;
+        },false);
+
+        angular.element(overlay).on('blur', function() {
+          $event.srcElement.width = targetWidth;
+          $event.srcElement.height = targetHeight;
+          overlay.parentNode.removeChild(overlay);
+          $event.srcElement.style.display = 'inline-block';
+        });
+
       };
 
       $scope.applyImage = function() {
@@ -316,7 +371,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         } else if (angular.element(node).attr('inline-text-editor') !== undefined && !angular.element(node).attr('href')) {
           return false;
         }
-        else {
+        else if (node && node.parentNode) {
           return linkFinder(node.parentNode);
         }
       };
@@ -375,6 +430,26 @@ function inlineTextEditor($sce, $compile, $timeout){
           }
         }
       };
+
+      var clearSelection = function() {
+        // Thanks to Tim Down
+        var sel;
+        if ( (sel = document.selection) && sel.empty ) {
+          sel.empty();
+        } else {
+          if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+          }
+          var activeEl = document.activeElement;
+          if (activeEl) {
+            var tagName = activeEl.nodeName.toLowerCase();
+            if ( tagName == "textarea" || (tagName == "input" && activeEl.type == "text") ) {
+              // Collapse the selection to the end
+              activeEl.selectionStart = activeEl.selectionEnd;
+            }
+          }
+        }
+      }
 
     }
   };

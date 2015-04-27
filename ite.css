@@ -9,6 +9,9 @@
     position: relative;
     cursor: text;
 }
+[data-inline-type] {
+  outline: none;
+}
 
 .ite-bold {
     font-weight: bold;
@@ -23,18 +26,26 @@
     text-decoration: line-through;
 }
 .ite-image {
-
+  /*border: 1px solid transparent;*/
 }
 
-.ite-image-handle-se {
+#ite-image-handle-se {
   width: 10px;
   height: 10px;
   border: 1px solid black;
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  cursor: nwse-resize;
 }
 
-.ite-image-resize-overlay {
-  background-color: black;
-  opacity: .15;
+#ite-image-resize-overlay {
+  background-color: transparent;
+  position: relative;
+  border: 1px solid black;
+  display: inline-block;
+  outline: none;
+  cursor: move;
 }
 
 .inline-text-editor .ite-image:hover {
@@ -47,7 +58,7 @@
 
 .color-picker {
   position: absolute;
-  top: -65px;
+  top: 33px;
   width: 100%;
   border: 1px solid grey;
   background-color: white;
@@ -60,7 +71,7 @@
 }
 
 .color {
-  width: 10px;
+  width: 10.18px;
   height: 10px;
   display: inline-block;
   cursor: pointer;
