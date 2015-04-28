@@ -190,14 +190,14 @@ function inlineTextEditor($sce, $compile, $timeout){
         clearSelection();
 
         var target, targetWidth, targetHeight, ratio, overlayWidth, overlayHeight, startPositionX, startPositionY, currentPositionX, currentPositionY;
-        target = angular.element($event.srcElement)
-        targetWidth = $event.srcElement.width;
-        targetHeight = $event.srcElement.height;
+        target = angular.element($event.target)
+        targetWidth = $event.target.width;
+        targetHeight = $event.target.height;
         ratio = targetHeight / targetWidth;
 
         // hide the source image, and set up the nodes required for resizing the image
-        $event.srcElement.style.display = 'none';
-        target.after('<div tabindex="0" id="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;" contentEditable="false"><img src="'+$event.srcElement.currentSrc+'" height="100%" width="100%"/><div draggable="true" id="ite-image-handle-se" contentEditable="false"></div></div>');
+        $event.target.style.display = 'none';
+        target.after('<div tabindex="0" id="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;" contentEditable="false"><img src="'+$event.target.currentSrc+'" height="100%" width="100%"/><div draggable="true" id="ite-image-handle-se" contentEditable="false"></div></div>');
         seHandle = document.getElementById('ite-image-handle-se');
         overlay = document.getElementById('ite-image-resize-overlay');
         overlay.focus();
@@ -239,12 +239,12 @@ function inlineTextEditor($sce, $compile, $timeout){
 
         angular.element(overlay).on('blur', function() {
           // Set final height for image
-          $event.srcElement.width = targetWidth;
-          $event.srcElement.height = targetHeight;
+          $event.target.width = targetWidth;
+          $event.target.height = targetHeight;
           // Remove resize nodes
           overlay.parentNode.removeChild(overlay);
           // show the orginal image
-          $event.srcElement.style.display = 'inline-block';
+          $event.target.style.display = 'inline-block';
         });
 
       };
