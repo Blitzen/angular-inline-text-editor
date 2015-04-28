@@ -17,8 +17,8 @@ function inlineTextEditor($sce, $compile, $timeout){
       };
       // Write data to the model
       function read() {
-          html = element.html();
-          ngModel.$setViewValue(html);
+        html = element.html();
+        ngModel.$setViewValue(html);
       }
 
       $scope.linkUrl = null;
@@ -30,11 +30,11 @@ function inlineTextEditor($sce, $compile, $timeout){
       rangy.init();
 
       originalToolbar = [ '<div contentEditable="false" name="inlineToolbar" class="btn-group" role="group" aria-label="...">',
-                            '<button type="button" ng-click="applyClass(\'ite-bold\')" class="btn btn-default btn-sm" data-inline-type="ite-bold"><i class="fa fa-bold"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default btn-sm" data-inline-type="ite-italic"><i class="fa fa-italic"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default btn-sm" data-inline-type="ite-underline"><i class="fa fa-underline"></i></button>',
-                            '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default btn-sm" data-inline-type="ite-strikethrough"><i class="fa fa-strikethrough"></i></button>',
-                            '<button type="button" ng-click="openColorPicker()" class="btn btn-default btn-sm" data-inline-type="ite-color"><i class="fa fa-eyedropper"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-bold\')" class="btn btn-default btn-sm" data-inline-type="ite-bold" title="bold"><i class="fa fa-bold"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-italic\')" class="btn btn-default btn-sm" data-inline-type="ite-italic" title="italic"><i class="fa fa-italic"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-underline\')" class="btn btn-default btn-sm" data-inline-type="ite-underline" title="underline"><i class="fa fa-underline"></i></button>',
+                            '<button type="button" ng-click="applyClass(\'ite-strikethrough\')" class="btn btn-default btn-sm" data-inline-type="ite-strikethrough" title="strikethrough"><i class="fa fa-strikethrough"></i></button>',
+                            '<button type="button" ng-click="openColorPicker()" class="btn btn-default btn-sm" data-inline-type="ite-color"><i class="fa fa-eyedropper" title="colour picker"></i></button>',
                             '<div class="color-picker" ng-show="colorPickerActive">',
                               '<span ng-repeat="colorObj in colors">',
                                 '<span ng-click="applyColor(color)" ng-repeat="(color, hex) in colorObj | orderBy:key" class="color" style="background-color:{{color}}" ng-mouseover="setColors(color, hex)"></span>',
@@ -47,20 +47,20 @@ function inlineTextEditor($sce, $compile, $timeout){
                                 '<input id="inline-toolbar-image-url" type="text" url-validator placeholder="image link" ng-model="imageUrl" class="form-control input-sm" required/>',
                               '</form>',
                             '</div>',
-                            '<button type="button" ng-click="applyImage()" class="btn btn-default btn-sm" data-inline-type="ite-image"><i class="fa fa-image"></i></button>',
+                            '<button type="button" ng-click="applyImage()" class="btn btn-default btn-sm" data-inline-type="ite-image" title="add image"><i class="fa fa-image"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandLinkInput">',
                               '<form name="inlineToolbarUrlForm" class="input-group">',
                                 '<input id="inline-toolbar-link-url" type="text" url-validator placeholder="add url" ng-model="linkUrl" class="form-control input-sm" required/>',
                               '</form>',
                             '</div>',
-                            '<button type="button" ng-click="applyLink()" class="btn btn-default btn-sm" data-inline-type="ite-link"><i class="fa fa-link"></i></button>',
+                            '<button type="button" ng-click="applyLink()" class="btn btn-default btn-sm" data-inline-type="ite-link" title="add hyperlink"><i class="fa fa-link"></i></button>',
                             '<div class="btn-group ng-hide ng-cloak" ng-show="expandEmailInput">',
                               '<form name="inlineToolbarEmailForm" class="input-group">',
                                 '<input id="inline-toolbar-email" type="email" placeholder="add email" ng-model="email" class="form-control input-sm" required/>',
                               '</form>',
                             '</div>',
-                            '<button type="button" ng-click="applyEmail()" class="btn btn-default btn-sm" data-inline-type="ite-email">@</button>',
-                            '<button type="button" ng-click="resetSelection()" class="btn btn-default btn-sm"><i class="fa fa-undo"></i></button>',
+                            '<button type="button" ng-click="applyEmail()" class="btn btn-default btn-sm" data-inline-type="ite-email" title="add email link">@</button>',
+                            '<button type="button" ng-click="resetSelection()" class="btn btn-default btn-sm" title="reset selection"><i class="fa fa-eraser"></i></button>',
                           '</div>'].join('');
 
 
@@ -78,7 +78,7 @@ function inlineTextEditor($sce, $compile, $timeout){
           var start = range.anchorOffset;
           var end = range.focusOffset;
 
-          if (end - start !== 0) {
+          if (!range.isCollapsed) {
             createToolbar();
           } else {
             removeToolbar();
@@ -98,15 +98,6 @@ function inlineTextEditor($sce, $compile, $timeout){
           }
       });
 
-      $scope.applyClass = function(cssClass) {
-        // this conditional handles the edge case if the user clicks a class button while having link input open
-        if (savedSelection && rangy.getSelection().rangeCount == 0) { rangy.restoreSelection(savedSelection); }
-        var classApplierModule = rangy.modules.ClassApplier || rangy.modules.CssClassApplier;
-        classApplier = rangy.createCssClassApplier(cssClass);
-        classApplier.toggleSelection();
-        setButtonState();
-      };
-
       var classFinder = function(node, buttonType) {
         if (angular.element(node).hasClass(buttonType)) {
           return true;
@@ -117,6 +108,15 @@ function inlineTextEditor($sce, $compile, $timeout){
         else {
           return classFinder(node.parentNode, buttonType);
         }
+      };
+
+      $scope.applyClass = function(cssClass) {
+        // this conditional handles the edge case if the user clicks a class button while having link input open
+        if (savedSelection && rangy.getSelection().rangeCount == 0) { rangy.restoreSelection(savedSelection); }
+        var classApplierModule = rangy.modules.ClassApplier || rangy.modules.CssClassApplier;
+        classApplier = rangy.createCssClassApplier(cssClass);
+        classApplier.toggleSelection();
+        setButtonState();
       };
 
       $scope.openColorPicker = function() {
@@ -142,10 +142,10 @@ function inlineTextEditor($sce, $compile, $timeout){
         // Thanks to Tim Down for this code snippet
         var getComputedDisplay = (typeof window.getComputedStyle != "undefined") ?
           function(el) {
-              return window.getComputedStyle(el, null).display;
+            return window.getComputedStyle(el, null).display;
           } :
           function(el) {
-              return el.currentStyle.display;
+            return el.currentStyle.display;
           };
 
         var replaceWithOwnChildren = function(el) {
@@ -166,15 +166,14 @@ function inlineTextEditor($sce, $compile, $timeout){
               // Split partially selected nodes
               range.splitBoundaries();
 
-              // Get formatting elements. For this example, we'll count any
-              // element with display: inline, except <br>s.
+              // Get formatting elements
               var formattingEls = range.getNodes([1], function(el) {
-                  return el.tagName != "BR" && getComputedDisplay(el) == "inline";
+                return el.tagName != "BR" && getComputedDisplay(el) == "inline";
               });
 
               // Remove the formatting elements
               for (var i = 0, el; el = formattingEls[i++]; ) {
-                  replaceWithOwnChildren(el);
+                replaceWithOwnChildren(el);
               }
             }
           }
@@ -185,13 +184,14 @@ function inlineTextEditor($sce, $compile, $timeout){
       $scope.setImageResizeElements = function($event) {
         clearSelection();
 
-        var target, targetHeight, targetWidth, ratio, overlayWidth, overlayHeight, startPositionX, startPositionY, currentPositionX, currentPositionY;
+        var target, targetWidth, targetHeight, ratio, overlayWidth, overlayHeight, startPositionX, startPositionY, currentPositionX, currentPositionY;
         target = angular.element($event.srcElement)
-        targetHeight = $event.srcElement.height;
         targetWidth = $event.srcElement.width;
+        targetHeight = $event.srcElement.height;
         ratio = targetHeight / targetWidth;
-        $event.srcElement.style.display = 'none';
 
+        // hide the source image, and set up the nodes required for resizing the image
+        $event.srcElement.style.display = 'none';
         target.after('<div tabindex="0" id="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;" contentEditable="false"><img src="'+$event.srcElement.currentSrc+'" height="100%" width="100%"/><div draggable="true" id="ite-image-handle-se" contentEditable="false"></div></div>');
         seHandle = document.getElementById('ite-image-handle-se');
         overlay = document.getElementById('ite-image-resize-overlay');
@@ -201,6 +201,7 @@ function inlineTextEditor($sce, $compile, $timeout){
           currentPositionX = event.pageX;
           currentPositionY = event.pageY;
 
+          // Shift key ensures original image dimensions are retained
           if (event.shiftKey) {
             overlayWidth = (targetWidth + (currentPositionX - startPositionX));
             overlay.style.width = overlayWidth + "px";
@@ -222,22 +223,22 @@ function inlineTextEditor($sce, $compile, $timeout){
 
         seHandle.addEventListener('drag', function(event, ui) {
           setOverlaySize();
-          console.log('x: ',overlayWidth,'y: ',overlayHeight);
           return false;
         },false);
 
         seHandle.addEventListener('dragend', function(event) {
-          // setOverlaySize();
           targetHeight = overlayHeight;
           targetWidth = overlayWidth;
-
           return false;
         },false);
 
         angular.element(overlay).on('blur', function() {
+          // Set final height for image
           $event.srcElement.width = targetWidth;
           $event.srcElement.height = targetHeight;
+          // Remove resize nodes
           overlay.parentNode.removeChild(overlay);
+          // show the orginal image
           $event.srcElement.style.display = 'inline-block';
         });
 
@@ -257,14 +258,17 @@ function inlineTextEditor($sce, $compile, $timeout){
             angular.element(rangy.getSelection().focusNode).attr('src', $scope.imageUrl);
 
           } else if($scope.inlineToolbarImageForm.$valid) {
-            classApplier = rangy.createCssClassApplier('ite-image', {elementTagName: 'img', elementAttributes: {'src':$scope.imageUrl, 'ng-click':'setImageResizeElements($event)'}});
+            // generate random hex id. This is not intended to be perfectly colision free, however the likelihood is incredibly low, and this is only used for element compilation
+            var id = (Math.random()*0xFFFFFF<<0).toString(16);
+            classApplier = rangy.createCssClassApplier('ite-image', {elementTagName: 'img', elementAttributes: {'src':$scope.imageUrl, 'id':id, 'ng-click':'setImageResizeElements($event)'}});
             classApplier.toggleSelection();
-            $compile(element.contents())($scope);
+            var img = document.getElementById(id);
+            $compile(img)($scope);
           }
           $scope.imageUrl = '';
         }
-        // If the user hasn't entered a link (i.e. they have simply clicked the link button the first time to show the input),
-        // then we need to save the selection so we can resore it later since it will be wiped once the link input is focused
+        // If the user hasn't entered an image (i.e. they have simply clicked the image button the first time to show the input),
+        // then we need to save the selection so we can resore it later since it will be wiped once the image input is focused
         else {
           savedSelection = rangy.saveSelection();
           $scope.imageUrl = linkFinder(rangy.getSelection().focusNode) || '';
@@ -388,6 +392,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         toolbar[0].style.left = clickPosition.x - 50 + 'px';
         toolbar[0].style.top = clickPosition.y + 15 + 'px';
 
+        // Move toolbar to the left if the user clicks at the edge of the screen
         if ((window.outerWidth - clickPosition.x) - angular.element(toolbar).prop('offsetWidth') < 125) {
           toolbar[0].style.left = null;
           toolbar[0].style.right = (window.outerWidth - clickPosition.x) - 50 + 'px';
