@@ -15,11 +15,16 @@ function inlineTextEditor($sce, $compile, $timeout){
       ngModel.$render = function() {
         element.html(ngModel.$viewValue || '');
       };
+
       // Write data to the model
       function read() {
-        html = element.html();
-        ngModel.$setViewValue(html);
-      }
+        ngModel.$setViewValue(element.html());
+      };
+
+      //This is required if the directive holds any angular expressions (i.e. the ng-click expression on images)
+      $timeout(function() {
+        $compile(element.contents())($scope);
+      },0);
 
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
