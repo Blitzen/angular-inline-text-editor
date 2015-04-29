@@ -42,7 +42,7 @@ function inlineTextEditor($sce, $compile, $timeout){
                             '<button type="button" ng-click="openColorPicker()" class="btn btn-default btn-sm" data-inline-type="ite-color"><i class="fa fa-eyedropper" title="colour picker"></i></button>',
                             '<div class="color-picker" ng-show="colorPickerActive">',
                               '<span ng-repeat="colorObj in colors">',
-                                '<span ng-click="applyColor(color)" ng-repeat="(color, hex) in colorObj | orderBy:key" class="color" style="background-color:{{color}}" ng-mouseover="setColors(color, hex)"></span>',
+                                '<span ng-click="applyColor((\'ite-\' + color))" ng-repeat="(color, hex) in colorObj | orderBy:key" class="color" style="background-color:{{color}}" ng-mouseover="setColors(color, hex)"></span>',
                               '</span>',
                               '<div class="small">{{activeColor}} {{activeHex}}</div>',
                               // '<input type="text" class="form-control input-sm"/>',
@@ -131,7 +131,7 @@ function inlineTextEditor($sce, $compile, $timeout){
 
       $scope.applyColor = function(color) {
         rangy.restoreSelection(savedSelection);
-        classApplier = rangy.createCssClassApplier('ite-color', {elementTagName: 'span', elementAttributes: {'style': 'color:' + color}});
+        classApplier = rangy.createCssClassApplier(color);
         classApplier.undoToSelection();
         classApplier.applyToSelection();
         savedSelection = rangy.saveSelection();
@@ -467,14 +467,6 @@ function inlineTextEditor($sce, $compile, $timeout){
 
 inlineTextEditor.$inject = ["$sce", "$compile", "$timeout"];
 
-function toTrusted($sce){
-  return function(text) {
-      return $sce.trustAsHtml(text);
-  };
-}
-
-toTrusted.$inject = ["$sce"];
-
 function urlValidator() {
   return {
     restrict: 'A',
@@ -508,6 +500,5 @@ angular
   .module('InlineTextEditor')
   .directive('inlineTextEditor', inlineTextEditor)
   .directive('urlValidator', urlValidator)
-  .filter('toTrusted', toTrusted)
   ;
 })();
