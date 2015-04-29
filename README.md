@@ -3,16 +3,18 @@ A very basic WYSIWYG inline editor for AngularJS. [Demo](http://blitzen.github.i
 
 ## Dependencies
 - AngularJS
+- ngSanitize
 - [Rangy](https://github.com/timdown/rangy) v1.3+ (specifically, rangy-core.js, rangy-selectionsaverestor.js, rangyclassapplier.js)
 - Bootstap (CSS only)
 
 ## Installation
 - via bower: ```bower install angular-inline-text-editor --save-dev```
-- In order, include Angular, the three Rangy libraries mentioned above, ite.js and ite.css
-- Add angular-inline-text-editor as a dependency to your app module
+- In order, include Angular, ngSanitize, the three Rangy libraries mentioned above, ite.js and ite.css
+- Add angular-inline-text-editor and Angular-Sanitize as a dependency to your app module
 
 ``` javascript
 angular.module( 'myApp', [
+  'ngSanitize',
   'InlineTextEditor'
 ]);
 ```
@@ -24,11 +26,12 @@ angular.module( 'myApp', [
 ```
 - The contentEditable property is optional, but typically recommended assuming you want users to be able make edits.
 - Currently there is no explict save handler on the directive in order to keep things as simple as possible, but you can easily add an ```ng-change``` and bind a save function to the model.
-- If you need to see bound updates to the model immediately, you can set up a separate div that uses the included toTrusted filter: 
+- In order to bind the model to a div: 
 ``` html
-<div ng-bind-html="myModel | toTrusted"></div>
+<div ng-bind-html="myModel"></div>
 ```
 - Include ```ite.css``` in the ```head``` of your document/app
+- ngSanitize will handle sanitizing any inputted HTML to prevent XSS injection attacks. If you are running into sanitize errors, ensure you are not trying to include unsafe HTML. If you are running this library in a secure environment and are not concerned about sanitization, you can use $sce to trust html.  
 
 ## Contributing
 - The default toolbar should be configurable to allow additional button types

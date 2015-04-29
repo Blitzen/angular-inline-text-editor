@@ -19,7 +19,7 @@
         angular.module('myApp', ['ngSanitize','InlineTextEditor'])
 
         .controller('MyController', ["$scope", function($scope){
-            $scope.lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi dolor vero illum at iste. Eos, suscipit quas iste aut aliquam doloribus, consequuntur tempora quasi enim ipsam provident ad sunt blanditiis. <img src="http://i.imgur.com/jW3LVg3m.jpg" id="9f0765" ng-click="setImageResizeElements($event)" class="ite-image">';
+            $scope.lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi dolor vero illum at iste. Eos, suscipit quas iste aut aliquam doloribus, consequuntur tempora quasi enim ipsam provident ad sunt blanditiis.<br> <img src="http://i.imgur.com/jW3LVg3m.jpg" id="9f0765" ng-click="setImageResizeElements($event)" class="ite-image">';
 
         }]);
 
@@ -41,13 +41,11 @@
                 <div class="col-xs-6">
                     <h4>Make changes here:</h4>
                     <div inline-text-editor ng-model="lorem" placeholder="this is some placeholder text" class="inline-text-editor" contentEditable></div>
-                    <textarea rows="4" type="text" class="form-control" ng-model="lorem"></textarea>
                 </div>
 
                 <div class="col-xs-6">
                     <h4>Results:</h4>
                     <div class="well">
-
                         <div ng-bind-html="lorem"></div>
                     </div>
                 </div>

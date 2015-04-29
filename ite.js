@@ -245,6 +245,7 @@ function inlineTextEditor($sce, $compile, $timeout){
           overlay.parentNode.removeChild(overlay);
           // show the orginal image
           angular.element($event.target).removeClass('ite-display-none');
+          $scope.$evalAsync(read);
         });
 
       };
