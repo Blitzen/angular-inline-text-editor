@@ -196,7 +196,7 @@ function inlineTextEditor($sce, $compile, $timeout){
         ratio = targetHeight / targetWidth;
 
         // hide the source image, and set up the nodes required for resizing the image
-        $event.target.style.display = 'none';
+        angular.element($event.target).addClass('ite-display-none');
         target.after('<div tabindex="0" id="ite-image-resize-overlay" style="width:'+targetWidth+'px; height:'+targetHeight+'px;" contentEditable="false"><img src="'+$event.target.currentSrc+'" height="100%" width="100%"/><div draggable="true" id="ite-image-handle-se" contentEditable="false"></div></div>');
         seHandle = document.getElementById('ite-image-handle-se');
         overlay = document.getElementById('ite-image-resize-overlay');
@@ -244,7 +244,7 @@ function inlineTextEditor($sce, $compile, $timeout){
           // Remove resize nodes
           overlay.parentNode.removeChild(overlay);
           // show the orginal image
-          $event.target.style.display = 'inline-block';
+          angular.element($event.target).removeClass('ite-display-none');
         });
 
       };

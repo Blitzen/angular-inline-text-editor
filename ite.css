@@ -29,6 +29,10 @@
   /*border: 1px solid transparent;*/
 }
 
+.ite-display-none {
+  display: none;
+}
+
 #ite-image-handle-se {
   width: 10px;
   height: 10px;
@@ -82,7 +86,6 @@
   display: block; /* For Firefox */
   color: grey;
 }
-
 
 .ite-gold {
   color: #ffd700;
