@@ -2,7 +2,7 @@
 
 angular.module( 'InlineTextEditor', []);
 
-function inlineTextEditor($sce, $compile, $timeout){
+function inlineTextEditor($sce, $compile, $timeout, $window){
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -25,6 +25,16 @@ function inlineTextEditor($sce, $compile, $timeout){
       $timeout(function() {
         $compile(element.contents())($scope);
       },0);
+
+      window.onunload = window.onbeforeunload = (function(){
+        return function(){
+          // do your thing here...
+          overlay = document.getElementById('ite-image-resize-overlay');
+          if (overlay) {
+            return 'you currently have an image selected, please de-select it before leaving the page'
+          }
+        }
+      }());
 
       $scope.linkUrl = null;
       $scope.expandLinkInput = false;
@@ -132,10 +142,11 @@ function inlineTextEditor($sce, $compile, $timeout){
       $scope.applyColor = function(color) {
         rangy.restoreSelection(savedSelection);
         classApplier = rangy.createCssClassApplier(color);
-        classApplier.undoToSelection();
+        // classApplier.undoToSelection();
         classApplier.applyToSelection();
-        savedSelection = rangy.saveSelection();
+        $scope.colorPickerActive = false;
         setButtonState();
+        removeToolbar('force');
       };
 
       $scope.setColors = function(color, hex) {
@@ -220,6 +231,17 @@ function inlineTextEditor($sce, $compile, $timeout){
           }
         }
 
+        var tearDownAndReset = function() {
+          // Set final height for image
+          $event.target.width = targetWidth;
+          $event.target.height = targetHeight;
+          // Remove resize nodes
+          overlay.parentNode.removeChild(overlay);
+          // show the orginal image
+          angular.element($event.target).removeClass('ite-display-none');
+          $scope.$evalAsync(read);
+        }
+
         seHandle.addEventListener('dragstart', function(event) {
           startPositionX = event.pageX;
           startPositionY = event.pageY;
@@ -238,17 +260,11 @@ function inlineTextEditor($sce, $compile, $timeout){
         },false);
 
         angular.element(overlay).on('blur', function() {
-          // Set final height for image
-          $event.target.width = targetWidth;
-          $event.target.height = targetHeight;
-          // Remove resize nodes
-          overlay.parentNode.removeChild(overlay);
-          // show the orginal image
-          angular.element($event.target).removeClass('ite-display-none');
-          $scope.$evalAsync(read);
+          tearDownAndReset();
         });
 
       };
+
 
       $scope.applyImage = function() {
         // this checks if the user has typed in a link or not
