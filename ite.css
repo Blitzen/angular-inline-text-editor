@@ -29,6 +29,10 @@
   /*border: 1px solid transparent;*/
 }
 
+.ite-display-none {
+  display: none;
+}
+
 #ite-image-handle-se {
   width: 10px;
   height: 10px;
@@ -81,4 +85,425 @@
   content: attr(placeholder);
   display: block; /* For Firefox */
   color: grey;
+}
+
+.ite-gold {
+  color: #ffd700;
+}
+.ite-yellow {
+  color: #ffff00;
+}
+.ite-springgreen {
+  color: #00ff7f;
+}
+.ite-mediumspringgreen {
+  color: #00fa9a;
+}
+.ite-cyan {
+  color: #00ffff;
+}
+.ite-aqua {
+  color: #00ffff;
+}
+.ite-turquoise {
+  color: #40e0d0;
+}
+.ite-mediumturquoise {
+  color: #48d1cc;
+}
+.ite-mediumaquamarine {
+  color: #66cdaa;
+}
+.ite-darkseagreen {
+  color: #8fbc8f;
+}
+.ite-lightgreen {
+  color: #90ee90;
+}
+.ite-palegreen {
+  color: #98fb98;
+}
+.ite-aquamarine {
+  color: #7fffd4;
+}
+.ite-lightskyblue {
+  color: #87cefa;
+}
+.ite-skyblue {
+  color: #87ceeb;
+}
+.ite-paleturquoise {
+  color: #afeeee;
+}
+.ite-powderblue {
+  color: #b0e0e6;
+}
+.ite-lightblue {
+  color: #add8e6;
+}
+.ite-lightsteelblue {
+  color: #b0c4de;
+}
+.ite-silver {
+  color: #c0c0c0;
+}
+.ite-darkgray {
+  color: #a9a9a9;
+}
+.ite-rosybrown {
+  color: #bc8f8f;
+}
+.ite-palevioletred {
+  color: #d87093;
+}
+.ite-hotpink {
+  color: #ff69b4;
+}
+.ite-lightpink {
+  color: #ffb6c1;
+}
+.ite-pink {
+  color: #ffc0cb;
+}
+.ite-lemonchiffon {
+  color: #fffacd;
+}
+.ite-lightgoldenrodyellow {
+  color: #fafad2;
+}
+.ite-lightyellow {
+  color: #ffffe0;
+}
+.ite-cornsilk {
+  color: #fff8dc;
+}
+.ite-beige {
+  color: #f5f5dc;
+}
+.ite-linen {
+  color: #faf0e6;
+}
+.ite-oldlace {
+  color: #fdf5e6;
+}
+.ite-seashell {
+  color: #fff5ee;
+}
+.ite-floralwhite {
+  color: #fffaf0;
+}
+.ite-ivory {
+  color: #fffff0;
+}
+.ite-white {
+  color: #ffffff;
+}
+.ite-snow {
+  color: #fffafa;
+}
+.ite-ghostwhite {
+  color: #f8f8ff;
+}
+.ite-aliceblue {
+  color: #f0f8ff;
+}
+.ite-azure {
+  color: #f0ffff;
+}
+.ite-mintcream {
+  color: #f5fffa;
+}
+.ite-honeydew {
+  color: #f0fff0;
+}
+.ite-whitesmoke {
+  color: #f5f5f5;
+}
+.ite-lavenderblush {
+  color: #fff0f5;
+}
+.ite-mistyrose {
+  color: #ffe4e1;
+}
+.ite-antiquewhite {
+  color: #faebd7;
+}
+.ite-papayawhip {
+  color: #ffefd5;
+}
+.ite-blanchedalmond {
+  color: #ffebcd;
+}
+.ite-bisque {
+  color: #ffe4c4;
+}
+.ite-peachpuff {
+  color: #ffdab9;
+}
+.ite-moccasin {
+  color: #ffe4b5;
+}
+.ite-navajowhite {
+  color: #ffdead;
+}
+.ite-wheat {
+  color: #f5deb3;
+}
+.ite-palegoldenrod {
+  color: #eee8aa;
+}
+.ite-khaki {
+  color: #f0e68c;
+}
+.ite-lightcyan {
+  color: #e0ffff;
+}
+.ite-lavender {
+  color: #e6e6fa;
+}
+.ite-gainsboro {
+  color: #dcdcdc;
+}
+.ite-lightgrey {
+  color: #d3d3d3;
+}
+.ite-thistle {
+  color: #d8bfd8;
+}
+.ite-plum {
+  color: #dda0dd;
+}
+.ite-violet {
+  color: #ee82ee;
+}
+.ite-orchid {
+  color: #da70d6;
+}
+.ite-mediumorchid {
+  color: #ba55d3;
+}
+.ite-mediumpurple {
+  color: #9370d8;
+}
+.ite-mediumslateblue {
+  color: #7b68ee;
+}
+.ite-slateblue {
+  color: #6a5acd;
+}
+.ite-royalblue {
+  color: #4169e1;
+}
+.ite-steelblue {
+  color: #4682b4;
+}
+.ite-cadetblue {
+  color: #5f9ea0;
+}
+.ite-lightslategray {
+  color: #778899;
+}
+.ite-slategray {
+  color: #708090;
+}
+.ite-gray {
+  color: #808080;
+}
+.ite-indianred  {
+  color: #cd5c5c;
+}
+.ite-tomato {
+  color: #ff6347;
+}
+.ite-coral {
+  color: #ff7f50;
+}
+.ite-salmon {
+  color: #fa8072;
+}
+.ite-lightcoral {
+  color: #f08080;
+}
+.ite-darksalmon {
+  color: #e9967a;
+}
+.ite-lightsalmon {
+  color: #ffa07a;
+}
+.ite-sandybrown {
+  color: #f4a460;
+}
+.ite-burlywood {
+  color: #deb887;
+}
+.ite-tan {
+  color: #d2b48c;
+}
+.ite-darkkhaki {
+  color: #bdb76b;
+}
+.ite-yellowgreen {
+  color: #9acd32;
+}
+.ite-greenyellow {
+  color: #adff2f;
+}
+.ite-chartreuse {
+  color: #7fff00;
+}
+.ite-lawngreen {
+  color: #7cfc00;
+}
+.ite-lime {
+  color: #00ff00;
+}
+.ite-limegreen {
+  color: #32cd32;
+}
+.ite-mediumseagreen {
+  color: #3cb371;
+}
+.ite-seagreen {
+  color: #2e8b57;
+}
+.ite-forestgreen {
+  color: #228b22;
+}
+.ite-green {
+  color: #008000;
+}
+.ite-darkgreen {
+  color: #006400;
+}
+.ite-black {
+  color: #000000;
+}
+.ite-maroon {
+  color: #800000;
+}
+.ite-darkred {
+  color: #8b0000;
+}
+.ite-saddlebrown {
+  color: #8b4513;
+}
+.ite-sienna {
+  color: #a0522d;
+}
+.ite-brown {
+  color: #a52a2a;
+}
+.ite-firebrick {
+  color: #b22222;
+}
+.ite-crimson {
+  color: #dc143c;
+}
+.ite-red {
+  color: #ff0000;
+}
+.ite-orangered {
+  color: #ff4500;
+}
+.ite-darkorange {
+  color: #ff8c00;
+}
+.ite-orange {
+  color: #ffa500;
+}
+.ite-goldenrod {
+  color: #daa520;
+}
+.ite-peru {
+  color: #cd853f;
+}
+.ite-chocolate {
+  color: #d2691e;
+}
+.ite-darkgoldenrod {
+  color: #b8860b;
+}
+.ite-olive {
+  color: #808000;
+}
+.ite-olivedrab {
+  color: #6b8e23;
+}
+.ite-darkolivegreen {
+  color: #556b2f;
+}
+.ite-darkslategray {
+  color: #2f4f4f;
+}
+.ite-darkslateblue {
+  color: #483d8b;
+}
+.ite-dimgray {
+  color: #696969;
+}
+.ite-teal {
+  color: #008080;
+}
+.ite-darkcyan {
+  color: #008b8b;
+}
+.ite-lightseagreen {
+  color: #20b2aa;
+}
+.ite-darkturquoise {
+  color: #00ced1;
+}
+.ite-deepskyblue {
+  color: #00bfff;
+}
+.ite-dodgerblue {
+  color: #1e90ff;
+}
+.ite-cornflowerblue {
+  color: #6495ed;
+}
+.ite-darkorchid {
+  color: #9932cc;
+}
+.ite-blueviolet {
+  color: #8a2be2;
+}
+.ite-darkviolet {
+  color: #9400d3;
+}
+.ite-blue {
+  color: #0000ff;
+}
+.ite-mediumblue {
+  color: #0000cd;
+}
+.ite-darkblue {
+  color: #00008b;
+}
+.ite-navy {
+  color: #000080;
+}
+.ite-midnightblue {
+  color: #191970;
+}
+.ite-indigo {
+  color: #4b0082;
+}
+.ite-purple {
+  color: #800080;
+}
+.ite-darkmagenta {
+  color: #8b008b;
+}
+.ite-mediumvioletred {
+  color: #c71585;
+}
+.ite-deeppink {
+  color: #ff1493;
+}
+.ite-magenta {
+  color: #ff00ff;
+}
+.ite-fuchsia {
+  color: #ff00ff;
 }
