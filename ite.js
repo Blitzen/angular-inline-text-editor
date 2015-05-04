@@ -21,7 +21,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
         var html = element.html();
         if (html == '<br>') {
           angular.element(element).empty();
-          html = attrs.placeholder ? attrs.placeholder : '';
+          html = '';
         }
         ngModel.$setViewValue(html);
       };
