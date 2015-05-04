@@ -18,7 +18,11 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
 
       // Write data to the model
       function read() {
-        ngModel.$setViewValue(element.html());
+        var html = element.html();
+        if (html == '<br>') {
+          html = '';
+        }
+        ngModel.$setViewValue(html);
       };
 
       //This is required if the directive holds any angular expressions (i.e. the ng-click expression on images)
@@ -106,9 +110,9 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
         removeToolbar();
       });
 
-      // Bind to escape key to remove the toolbar
+      // Bind to escape key and delete key to remove the toolbar
       element.bind("keydown", function (e) {
-          if (e.keyCode == 27) {
+          if (e.keyCode == 27 || e.keyCode == 8 || e.keyCode == 46) {
             removeToolbar('escape');
           }
       });

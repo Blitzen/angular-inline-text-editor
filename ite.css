@@ -4,11 +4,14 @@
 }
 
 [inline-text-editor] {
-    display: inline-block;
-    outline: none;
-    position: relative;
-    cursor: text;
+  display: inline-block;
+  outline: none;
+  position: relative;
+  cursor: text;
+  padding: 6px 0px;
+  min-width: 150px;
 }
+
 [data-inline-type] {
   outline: none;
 }
