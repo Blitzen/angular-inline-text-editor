@@ -4,12 +4,18 @@
 }
 
 [inline-text-editor] {
-  display: inline-block;
+  display: block;
   outline: none;
   position: relative;
   cursor: text;
   padding: 6px 0px;
   min-width: 150px;
+}
+
+[inline-text-editor][contentEditable]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: grey;
 }
 
 [data-inline-type] {
@@ -82,12 +88,6 @@
   height: 10px;
   display: inline-block;
   cursor: pointer;
-}
-
-[inline-text-editor][contentEditable]:empty:before {
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  color: grey;
 }
 
 .ite-gold {

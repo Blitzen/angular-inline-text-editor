@@ -20,7 +20,8 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
       function read() {
         var html = element.html();
         if (html == '<br>') {
-          html = '';
+          angular.element(element).empty();
+          html = attrs.placeholder ? attrs.placeholder : '';
         }
         ngModel.$setViewValue(html);
       };
