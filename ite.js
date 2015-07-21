@@ -1,8 +1,8 @@
 (function () {
 
-angular.module( 'InlineTextEditor', []);
+angular.module( 'InlineTextEditor', ['ngSanitize']);
 
-function inlineTextEditor($sce, $compile, $timeout, $window){
+function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -89,6 +89,17 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
       element.on('blur keyup change mouseup', function() {
         $scope.$evalAsync(read);
       });
+
+
+      element.on('paste', function() {
+        pastedContent = event.clipboardData.getData('text/plain');
+        if (event.preventDefault) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+        window.document.execCommand('insertText', false, pastedContent);
+      });
+
 
       // Create or remove toolbar depending on rangy selection
       element.bind('mouseup', function (e) {
@@ -487,7 +498,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window){
   };
 }
 
-inlineTextEditor.$inject = ["$sce", "$compile", "$timeout"];
+inlineTextEditor.$inject = ["$sce", "$compile", "$timeout", "$window", "$sanitize"];
 
 function urlValidator() {
   return {
