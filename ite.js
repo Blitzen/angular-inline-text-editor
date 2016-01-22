@@ -511,7 +511,7 @@ function urlValidator() {
     link: function ($scope, element, attrs, ctrl) {
       element.on("keyup", function(event) {
 
-        var regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-\?\=\&\#]*)$/i;
+        var regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-\?\=\&\#%]*)$/i;
 
         // Set validity of the field controller
         if ($scope.ngModel && $scope.ngModel.match(regex)) {
