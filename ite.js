@@ -331,7 +331,12 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
         if ($scope.expandLinkInput) {
 
           var httpRegex = new RegExp('http(s)?://', 'g', 'i');
-          $scope.linkUrl = $scope.linkUrl.match(httpRegex) ? $scope.linkUrl : 'http://'+$scope.linkUrl;
+          var anchorRegex = /(?:^|\s+)(#\w+)/;
+          var linkIsAnchor = $scope.linkUrl.match(anchorRegex);
+          
+          if (!linkIsAnchor) {
+            $scope.linkUrl = $scope.linkUrl.match(httpRegex) ? $scope.linkUrl : 'http://'+$scope.linkUrl;
+          }
 
           rangy.restoreSelection(savedSelection);
 
@@ -340,7 +345,11 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
             angular.element(rangy.getSelection().focusNode).attr('href', $scope.linkUrl);
 
           } else if($scope.inlineToolbarUrlForm.$valid) {
-            classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
+            if (linkIsAnchor) {
+              classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl}});
+            } else {
+              classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
+            }
             classApplier.toggleSelection();
           }
           $scope.linkUrl = '';
@@ -510,11 +519,11 @@ function urlValidator() {
     },
     link: function ($scope, element, attrs, ctrl) {
       element.on("keyup", function(event) {
-
-        var regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-\?\=\&\#\%\(\)\[\]\@\!\$\'\*\+\,\;\:]*)$/i;
-
+        
+        var urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-\?\=\&\#\%\(\)\[\]\@\!\$\'\*\+\,\;\:]*)$/i;
+        var anchorRegex = /(?:^|\s+)(#\w+)/;
         // Set validity of the field controller
-        if ($scope.ngModel && $scope.ngModel.match(regex)) {
+        if ($scope.ngModel && ($scope.ngModel.match(urlRegex) || $scope.ngModel.match(anchorRegex)) ) {
           $scope.$apply(function() {
             ctrl.$setValidity("hyperlink", true);
           });
@@ -522,7 +531,13 @@ function urlValidator() {
           $scope.$apply(function() {
             ctrl.$setValidity("hyperlink", false);
           });
-            }
+        }
+
+        if (event.keyCode == 13) {
+          $scope.$apply(function() {
+            $scope.$parent.applyLink();
+          });
+        }
 
       });
     }
