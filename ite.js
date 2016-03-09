@@ -85,9 +85,16 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
 
 
 
-      // Listen for change events to enable binding
-      element.on('blur keyup change mouseup', function() {
+      // Update on blur
+      element.on('blur', function() {
         $scope.$evalAsync(read);
+      });
+
+      // Listen for change events to enable binding
+      $scope.$watch(angular.bind(element, function(){
+        return element.html();
+        }), function() {
+          $scope.$evalAsync(read);
       });
 
 
@@ -145,7 +152,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
         // this conditional handles the edge case if the user clicks a class button while having link input open
         if (savedSelection && rangy.getSelection().rangeCount == 0) { rangy.restoreSelection(savedSelection); }
         var classApplierModule = rangy.modules.ClassApplier || rangy.modules.CssClassApplier;
-        classApplier = rangy.createCssClassApplier(cssClass);
+        classApplier = rangy.createClassApplier(cssClass);
         classApplier.toggleSelection();
         setButtonState();
       };
@@ -157,7 +164,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
 
       $scope.applyColor = function(color) {
         rangy.restoreSelection(savedSelection);
-        classApplier = rangy.createCssClassApplier(color);
+        classApplier = rangy.createClassApplier(color);
         // classApplier.undoToSelection();
         classApplier.applyToSelection();
         $scope.colorPickerActive = false;
@@ -298,7 +305,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
           } else if($scope.inlineToolbarImageForm.$valid) {
             // generate random hex id. This is not intended to be perfectly colision free, however the likelihood is incredibly low, and this is only used for element compilation
             var id = (Math.random()*0xFFFFFF<<0).toString(16);
-            classApplier = rangy.createCssClassApplier('ite-image', {elementTagName: 'img', elementAttributes: {'src':$scope.imageUrl, 'id':id, 'ng-click':'setImageResizeElements($event)'}});
+            classApplier = rangy.createClassApplier('ite-image', {elementTagName: 'img', elementAttributes: {'src':$scope.imageUrl, 'id':id, 'ng-click':'setImageResizeElements($event)'}});
             classApplier.toggleSelection();
             var img = document.getElementById(id);
             $compile(img)($scope);
@@ -333,7 +340,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
           var httpRegex = new RegExp('http(s)?://', 'g', 'i');
           var anchorRegex = /(?:^|\s+)(#\w+)/;
           var linkIsAnchor = $scope.linkUrl.match(anchorRegex);
-          
+
           if (!linkIsAnchor) {
             $scope.linkUrl = $scope.linkUrl.match(httpRegex) ? $scope.linkUrl : 'http://'+$scope.linkUrl;
           }
@@ -346,9 +353,9 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
 
           } else if($scope.inlineToolbarUrlForm.$valid) {
             if (linkIsAnchor) {
-              classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl}});
+              classApplier = rangy.createClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl}});
             } else {
-              classApplier = rangy.createCssClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
+              classApplier = rangy.createClassApplier('ite-link', {elementTagName: 'a', elementAttributes: {'href':$scope.linkUrl, 'target':'_blank'}});
             }
             classApplier.toggleSelection();
           }
@@ -365,7 +372,9 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
         if ($scope.expandLinkInput) {
           $timeout(function() {
             var el = document.getElementById('inline-toolbar-link-url')
-            el.focus();
+            if (el) {
+              el.focus();
+            }
             angular.element(el).bind('blur', function (e) {
              removeToolbar();
             });
@@ -389,7 +398,7 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
             angular.element(rangy.getSelection().focusNode).attr('href', $scope.email);
 
           } else if($scope.inlineToolbarEmailForm.$valid) {
-            classApplier = rangy.createCssClassApplier('ite-email', {elementTagName: 'a', elementAttributes: {'href':$scope.email}});
+            classApplier = rangy.createClassApplier('ite-email', {elementTagName: 'a', elementAttributes: {'href':$scope.email}});
             classApplier.toggleSelection();
           }
           $scope.email = '';
@@ -519,7 +528,6 @@ function urlValidator() {
     },
     link: function ($scope, element, attrs, ctrl) {
       element.on("keyup", function(event) {
-        
         var urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-\?\=\&\#\%\(\)\[\]\@\!\$\'\*\+\,\;\:]*)$/i;
         var anchorRegex = /(?:^|\s+)(#\w+)/;
         // Set validity of the field controller
