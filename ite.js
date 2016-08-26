@@ -27,8 +27,16 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
       };
 
       //This is required if the directive holds any angular expressions (i.e. the ng-click expression on images)
+      //Any angular interpolation is stripped out, compiled, and then added back in later so that you can use
+      //$interpolations properly.
       $timeout(function() {
+        var replacedContent = element.contents().text().replace(new RegExp('{{', 'g'), '*|');
+        replacedContent = replacedContent.replace(new RegExp('}}', 'g'), '|*');
+        element.contents().text(replacedContent)
         $compile(element.contents())($scope);
+        var resetContent = element.contents().text().replace(new RegExp('\\*\\|', 'g'), '{{');
+        resetContent = resetContent.replace(new RegExp('\\|\\*', 'g'), '}}');
+        element.contents().text(resetContent);
       },0);
 
       window.onunload = window.onbeforeunload = (function(){
