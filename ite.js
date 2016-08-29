@@ -30,14 +30,14 @@ function inlineTextEditor($sce, $compile, $timeout, $window, $sanitize){
       //Any angular interpolation is stripped out, compiled, and then added back in later so that you can use
       //$interpolations properly.
       $timeout(function() {
-        if (element.contents().html()) {
-          var replacedContent = element.contents().html().replace(new RegExp('{{', 'g'), '*|');
+        if (element.html()) {
+          var replacedContent = element.html().replace(new RegExp('{{', 'g'), '*|');
           replacedContent = replacedContent.replace(new RegExp('}}', 'g'), '|*');
-          element.contents().html(replacedContent)
+          element.html(replacedContent)
           $compile(element.contents())($scope);
-          var resetContent = element.contents().html().replace(new RegExp('\\*\\|', 'g'), '{{');
+          var resetContent = element.html().replace(new RegExp('\\*\\|', 'g'), '{{');
           resetContent = resetContent.replace(new RegExp('\\|\\*', 'g'), '}}');
-          element.contents().html(resetContent);
+          element.html(resetContent);
         }
       },0);
 
